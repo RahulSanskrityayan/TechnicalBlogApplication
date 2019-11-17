@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import technicalBlog.Service.PostService;
+import technicalBlog.Service.UserService;
 import technicalBlog.model.Post;
 import technicalBlog.model.User;
 
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 public class UserController {
     @Autowired
     private PostService postService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("users/login")
     public String login(){
@@ -26,7 +29,12 @@ public class UserController {
     }
     @RequestMapping(value = "users/login", method= RequestMethod.POST)
     public String loginUser(User user) {
-        return "redirect:/posts";
+        if(userService.login(user)) {
+            return "redirect:/posts";
+        }
+        else {
+            return "users/login";
+        }
     }
     @RequestMapping(value = "users/logout", method= RequestMethod.POST)
     public String logout(Model model) {
@@ -35,5 +43,13 @@ public class UserController {
         model.addAttribute("posts",posts);
         return "index";
     }
+    @RequestMapping(value = "users/registration", method= RequestMethod.POST)
+    public String registerUser(User user){
+        return "users/login";
+
+    }
+
+
+
 
 }
